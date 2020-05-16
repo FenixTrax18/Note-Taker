@@ -18,12 +18,12 @@ app.use(express.json());
 
 // HTML Route - Basic route that sends the user first to the AJAX Page
 app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "../../index.html"));
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // HTML Route - Send the user to the notes page.
 app.get("/notes", function(req, res) {
-  res.sendFile(path.join(__dirname, "../../notes.html"));
+  res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
 // API Route - Retrieves all the notes.
