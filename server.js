@@ -29,7 +29,10 @@ app.get("/notes", function(req, res) {
 
 // API Route - Retrieves all the notes.
 app.get("/api/notes", function(req, res) {
-  
+  var data = fs.readFileSync(__dirname + "/db/db.json");
+  var noteDbArr = [];
+  noteDbArr = JSON.parse(data);
+  return res.json(noteDbArr);  
 });
 
 // API Route - Saves a new note to the list.
