@@ -31,7 +31,10 @@ app.get("/notes", function(req, res) {
 app.get("/api/notes", function(req, res) {
   var data = fs.readFileSync(__dirname + "/db/db.json");
   var noteDbArr = [];
-  noteDbArr = JSON.parse(data);
+  
+  if(data.length > 0){
+    noteDbArr = JSON.parse(data);
+  }
   return res.json(noteDbArr);  
 });
 
@@ -42,35 +45,59 @@ app.post("/api/notes", function(req, res) {
   var data = fs.readFileSync(__dirname + "/db/db.json");
   console.log(data);
   console.log(newNote);
-
   var noteDbArr = [];
-      noteDbArr = JSON.parse(data);
-      noteDbArr.push(newNote);
-      fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteDbArr), function(err){
-        if (err) {
-            return console.log(err);
-        }
-        console.log("Success!");
-      });
-      return res.json(noteDbArr);
-});
 
-// API Route - Deletes the note identified by input id.
-app.delete("/api/notes/:id", function(req, res) {
-  var chosen = req.params.id;
-
-app.use(express.static(__dirname + "/public"));
-
-  console.log(chosen);
-
-  for (var i = 0; i < characters.length; i++) {
-    if (chosen === characters[i].routeName) {
-      return res.json(characters[i]);
+  var newId = 1;
+  if(data.length > 0){
+    noteDbArr = JSON.parse(data);
+    //todo: what happens if noteDbArr is empty?
+    if(noteDbArr.length > 0){
+      newId = noteDbArr[noteDbArr.length - 1].id + 1;
     }
   }
 
-  return res.json(false);
-});
+    newNote.id = newId;
+    noteDbArr.push(newNote);
+    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteDbArr), function(err){
+      if (err) {
+          return console.log(err);
+      }
+      console.log("Success!");
+    });
+    return res.json(noteDbArr);
+  });
+
+// API Route - Deletes the note identified by input id.
+app.delete("/api/notes/:id", function(req, res) {
+  var deleteNoteId = req.params.id;
+  var data = fs.readFileSync(__dirname + "/db/db.json");
+  var noteListArr = [];
+  
+  if(data.length > 0){
+    noteListArr = JSON.parse(data);
+    console.log(noteListArr);
+    console.log(deleteNoteId);
+    
+    for(var i=0; i < noteListArr.length; i++){
+      if (deleteNoteId == noteListArr[i].id){
+        console.log(noteListArr[i]);
+        noteListArr.splice(i,1);
+        console.log(noteListArr);
+        break;
+      }
+    }
+    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteListArr), function(err){
+      if (err) {
+          return console.log(err);
+      }
+      console.log("Success!");
+    });
+    return res.json(noteListArr);
+  }
+  else{
+    return res.json([]);
+  }
+  });
 
 
 // Listener
