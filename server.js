@@ -40,6 +40,8 @@ app.post("/api/notes", function(req, res) {
 app.delete("/api/notes/:id", function(req, res) {
   var chosen = req.params.id;
 
+app.use(express.static(__dirname + "/public"));
+
   console.log(chosen);
 
   for (var i = 0; i < characters.length; i++) {
