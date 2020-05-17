@@ -2,6 +2,7 @@
 // =============================================================
 var express = require("express");
 var path = require("path");
+var fs = require("fs");
 
 // Sets up the Express App
 // =============================================================
@@ -33,7 +34,22 @@ app.get("/api/notes", function(req, res) {
 
 // API Route - Saves a new note to the list.
 app.post("/api/notes", function(req, res) {
-  
+  console.log("I am your API call.");
+  var newNote = req.body;
+  var data = fs.readFileSync(__dirname + "/db/db.json");
+  console.log(data);
+  console.log(newNote);
+
+  var noteDbArr = [];
+      noteDbArr = JSON.parse(data);
+      noteDbArr.push(newNote);
+      fs.writeFile(__dirname + "/db/db.json", JSON.stringify(noteDbArr), function(err){
+        if (err) {
+            return console.log(err);
+        }
+        console.log("Success!");
+      });
+      return res.json(noteDbArr);
 });
 
 // API Route - Deletes the note identified by input id.
@@ -54,8 +70,8 @@ app.use(express.static(__dirname + "/public"));
 });
 
 
-// Starts the server to begin listening
-// =============================================================
+// Listener
 app.listen(PORT, function() {
   console.log("App listening on PORT " + PORT);
 });
+
