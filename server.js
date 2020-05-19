@@ -50,7 +50,6 @@ app.post("/api/notes", function(req, res) {
   var newId = 1;
   if(data.length > 0){
     noteDbArr = JSON.parse(data);
-    //todo: what happens if noteDbArr is empty?
     if(noteDbArr.length > 0){
       newId = noteDbArr[noteDbArr.length - 1].id + 1;
     }
